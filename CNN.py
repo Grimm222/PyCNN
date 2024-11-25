@@ -10,17 +10,9 @@ from PIL import Image, ImageFile
 import timm
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-
 train_data_path = "D:\\train"
 val_data_path = "D:\\val"
 test_data_path = "D:\\test"
-
-
-class Dataset(object):
-	def __getitem__(self, index):
-		raise NotImplementedError
-	def __len__(self):
-		raise NotImplementedError
 
 transforms = transforms.Compose([transforms.Resize([224,224],interpolation=PIL.Image.BICUBIC),transforms.ToTensor(),transforms.Normalize(mean=[0.485, 0.456, 0.406], std = [0.229, 0.224, 0.225])])
 
@@ -33,8 +25,6 @@ batch_size=128
 train_data_loader = data.DataLoader(train_data, batch_size=batch_size)
 val_data_loader = data.DataLoader(val_data, batch_size=batch_size)
 test_data_loader = data.DataLoader(test_data, batch_size=batch_size)
-
-
 
 class SwTr(nn.Module):
 	def __init__(self,x, num_classes=3):
@@ -165,8 +155,6 @@ if a>0:
 	test(simpl, test_data_loader, device)
 else:
 	train(simpl, optimizer, torch.nn.CrossEntropyLoss(), train_data_loader, val_data_loader, device)
-
-	
 
 labels = ['blue','green','red']
 
