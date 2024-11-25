@@ -26,7 +26,7 @@ train_data_loader = data.DataLoader(train_data, batch_size=batch_size)
 val_data_loader = data.DataLoader(val_data, batch_size=batch_size)
 test_data_loader = data.DataLoader(test_data, batch_size=batch_size)
 
-class SwTr(nn.Module):
+class Model(nn.Module):
 	def __init__(self,x, num_classes=3):
 		super().__init__()
 		self.features = nn.Sequential(
@@ -69,7 +69,7 @@ else:
 y=torch.rand(2)
 
 #Initializing a class  simpl
-simpl = SwTr(y)
+simpl = Model(y)
 print("Do you want to re-train the model (0) or use ready-made weights and parameters(1)? ")
 
 b = input()
