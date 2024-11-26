@@ -8,11 +8,15 @@ import torch.nn.functional as F
 import PIL
 from PIL import Image, ImageFile
 import timm
+from pathlib import Path
 ImageFile.LOAD_TRUNCATED_IMAGES = True
+
 
 train_data_path = "D:\\train"
 val_data_path = "D:\\val"
 test_data_path = "D:\\test"
+
+
 
 transforms = transforms.Compose([transforms.Resize([224,224],interpolation=PIL.Image.BICUBIC),transforms.ToTensor(),transforms.Normalize(mean=[0.485, 0.456, 0.406], std = [0.229, 0.224, 0.225])])
 
@@ -26,7 +30,9 @@ train_data_loader = data.DataLoader(train_data, batch_size=batch_size)
 val_data_loader = data.DataLoader(val_data, batch_size=batch_size)
 test_data_loader = data.DataLoader(test_data, batch_size=batch_size)
 
-class Model(nn.Module):
+
+
+class SwTr(nn.Module):
 	def __init__(self,x, num_classes=3):
 		super().__init__()
 		self.features = nn.Sequential(
@@ -69,14 +75,14 @@ else:
 y=torch.rand(2)
 
 #Initializing a class  simpl
-simpl = Model(y)
+simpl = SwTr(y)
 print("Do you want to re-train the model (0) or use ready-made weights and parameters(1)? ")
 
 b = input()
 a = int(b)
 
 if a>0:
-	simpl.load_state_dict(torch.load('D:\\swin_transformer_model.pth',weights_only=True))
+	simpl.load_state_dict(torch.load('D:\\saved_transformer_model.pth',weights_only=True))
 	simpl.eval() 
 	simpl.to(device)
 
@@ -126,7 +132,9 @@ def train(model, optimizer, loss_fn, train_loader, val_loader, device):
 			valid_loss /= valid_iterator
 		print('E: {:2}, Training Loss: {:.10f}, Validation Loss: {:.10f}, accuracy = {:.2f}, {:}/{:}'.format(epoch+1, training_loss, valid_loss, num_correct / num_examples, num_correct, num_examples))
 
-	torch.save(model.state_dict(), 'D:\\swin_transformer_model.pth')
+	fle = Path('D:\\saved_transformer_model.pth')
+	fle.touch(exist_ok=True)
+	torch.save(model.state_dict(), 'D:\\saved_transformer_model.pth')
 	print("Model has been saved!")
 
 
@@ -155,6 +163,8 @@ if a>0:
 	test(simpl, test_data_loader, device)
 else:
 	train(simpl, optimizer, torch.nn.CrossEntropyLoss(), train_data_loader, val_data_loader, device)
+
+	
 
 labels = ['blue','green','red']
 
