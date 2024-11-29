@@ -11,10 +11,12 @@ import timm
 from pathlib import Path
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
+print ("Specify the path to the folder with images for training, test images and saved_transformer_model.pth (if it exist):")
+c=input()
 
-train_data_path = "D:\\train"
-val_data_path = "D:\\val"
-test_data_path = "D:\\test"
+train_data_path = c+"train"
+val_data_path = c+"val"
+test_data_path = c+"test"
 
 
 
@@ -82,7 +84,7 @@ b = input()
 a = int(b)
 
 if a>0:
-	simpl.load_state_dict(torch.load('D:\\saved_transformer_model.pth',weights_only=True))
+	simpl.load_state_dict(torch.load(c+'saved_transformer_model.pth',weights_only=False))
 	simpl.eval() 
 	simpl.to(device)
 
@@ -132,9 +134,9 @@ def train(model, optimizer, loss_fn, train_loader, val_loader, device):
 			valid_loss /= valid_iterator
 		print('E: {:2}, Training Loss: {:.10f}, Validation Loss: {:.10f}, accuracy = {:.2f}, {:}/{:}'.format(epoch+1, training_loss, valid_loss, num_correct / num_examples, num_correct, num_examples))
 
-	fle = Path('D:\\saved_transformer_model.pth')
+	fle = Path(c+'saved_transformer_model.pth')
 	fle.touch(exist_ok=True)
-	torch.save(model.state_dict(), 'D:\\saved_transformer_model.pth')
+	torch.save(model.state_dict(), c+'saved_transformer_model.pth')
 	print("Model has been saved!")
 
 
@@ -168,15 +170,15 @@ else:
 
 labels = ['blue','green','red']
 
-img1 = Image.open('D:\\blue1.png').convert('RGB')			 
+img1 = Image.open(c+'t1.png').convert('RGB')			 
 img1 = transforms(img1)
 img1 = img1.unsqueeze(0)
 
-img2 = Image.open('D:\\green1.png').convert('RGB')			 
+img2 = Image.open(c+'t2.png').convert('RGB')			 
 img2 = transforms(img2)
 img2 = img2.unsqueeze(0)
 
-img3 = Image.open('D:\\red1.png').convert('RGB')			 
+img3 = Image.open(c+'t3.png').convert('RGB')			 
 img3 = transforms(img3)
 img3 = img3.unsqueeze(0)
 
